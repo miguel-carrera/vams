@@ -96,7 +96,7 @@ Every VAMS document must set `$schema` to the pinned URL for the schema version 
 
 ### Releasing a new schema version
 
-1. Apply schema changes on `main`.
+1. Apply schema changes on `master`.
 2. Bump `version` and `tag` in `schemas/manifest.json`.
 3. Update `$id` and `properties.$schema.const` in both schema files to the new tag URL.
 4. Open a PR — CI validates the example corpus.

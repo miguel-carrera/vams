@@ -74,6 +74,7 @@ Architectures may include lifecycle metadata (version, status, ownership, valida
 
 ```json
 {
+  "$schema": "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/solution-architecture.schema.json",
   "name": "string",
   "level": "Highlevel | Detail | Sequence",
   "domain": "string",
@@ -88,7 +89,7 @@ Architectures may include lifecycle metadata (version, status, ownership, valida
 }
 ```
 
-**Required at root:** `name`, `level`, `architecture`.  
+**Required at root:** `$schema`, `name`, `level`, `architecture`.  
 **Optional:** `domain`, `metadata`, `metadata.commerce`.
 
 ---

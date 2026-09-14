@@ -2,7 +2,7 @@
 
 **commerce** property reference for **metadata.commerce** in solution-architecture.schema.json
 
-*Schema version 1.1.0 · VAMS 1.0 · All properties optional unless noted · ● = required when accountType = Marketplace*
+*Schema version 1.0.0 · VAMS 1.0 · All properties optional unless noted · ● = required when accountType = Marketplace*
 
 <table style="width:69%;">
 <colgroup>

@@ -2,7 +2,7 @@
 
 Schema reference for **architecture-case.metadata.schema.json**
 
-*Schema version 1.1.0 · VAMS 1.0 · For internal SA use only · May 2026*
+*Schema version 1.0.0 · VAMS 1.0 · May 2026*
 
 ## Overview
 
