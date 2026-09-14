@@ -1,0 +1,166 @@
+{
+  "$schema": "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/architecture-case.metadata.schema.json",
+  "id": "case-b2b-split-payment",
+  "title": "B2B Split Payment with Customer Credit and ERP Credit Gate",
+  "docxFile": "case-b2b-split-payment.docx",
+  "version": "1.0.0",
+  "status": "Approved",
+  "createdAt": "2026-05-18T00:00:00Z",
+  "createdBy": "Miguel Carrera",
+  "lastModifiedAt": "2026-05-18T00:00:00Z",
+  "lastModifiedBy": "Miguel Carrera",
+
+  "context": {
+    "industry": ["Wholesale", "Manufacturing"],
+    "businessModel": ["B2B"],
+    "region": ["US", "CA"],
+    "customerSize": "Enterprise",
+    "summary": "A wholesale distributor needs to support net-30 payment terms at checkout without replacing SmartCheckout. ERP credit limits must be enforced in real time before order placement to prevent over-credit exposure.",
+    "painPoints": [
+      "No native net-terms / purchase-order payment support in SmartCheckout",
+      "ERP holds live credit limits that must be validated before order confirmation",
+      "Finance team requires same-day reconciliation between VTEX orders and ERP credit accounts"
+    ],
+    "constraints": [
+      "Must not require a fully custom checkout implementation",
+      "Must integrate with existing ERP credit management module",
+      "Solution must be PCI-compliant without introducing new card data paths"
+    ]
+  },
+
+  "solution": {
+    "pattern": "Customer Credit + real-time ERP credit gate",
+    "summary": "Leverage VTEX Customer Credit as the payment method for net-terms orders. A lightweight VTEX IO middleware app intercepts the orderForm before placement, calls ERP credit management via REST, and either approves or holds the order. Approved orders flow normally; held orders trigger a notification workflow.",
+    "vtexProducts": ["Customer Credit", "SmartCheckout", "VTEX IO", "OMS"],
+    "externalIntegrations": [
+      "ERP credit management module",
+      "Notification service"
+    ],
+    "architectureFileRef": "b2b-customer-credit-erp.json",
+    "keyDecisions": [
+      {
+        "decision": "Use VTEX IO middleware for the ERP credit check instead of a standalone external service",
+        "rationale": "Keeps the integration inside the VTEX platform boundary, simplifies deployment and monitoring, and avoids an additional infrastructure component to maintain.",
+        "alternativesConsidered": [
+          "External API gateway proxying the ERP call",
+          "ERP-side webhook pushing credit status to VTEX"
+        ]
+      },
+      {
+        "decision": "Use order hold state (status: payment-pending) as the async fallback when ERP response exceeds 3 seconds",
+        "rationale": "Prevents checkout timeout failures from becoming lost orders. Finance reviews held orders within 1 business hour — acceptable SLA for B2B.",
+        "alternativesConsidered": [
+          "Reject order immediately on ERP timeout (too disruptive for B2B buyers)",
+          "Allow order and reconcile post-placement (unacceptable credit risk)"
+        ]
+      }
+    ],
+    "implementationComplexity": "Medium",
+    "estimatedTimeline": "6-10 weeks",
+    "implementationNotes": "ERP credit management API must support OAuth 2.0 client credentials — verify authentication requirements with the ERP operations team early. VTEX Customer Credit requires a manual credit limit setup per buyer account before go-live; plan for a data migration sprint if an existing credit book already lives in the ERP."
+  },
+
+  "tradeoffs": {
+    "pros": [
+      "No custom checkout — SmartCheckout UX is preserved, reducing implementation risk",
+      "VTEX Customer Credit is a native product — no additional licencing cost",
+      "Real-time credit enforcement prevents over-exposure before order confirmation",
+      "IO middleware pattern is reusable across similar B2B scenarios with the same ERP integration"
+    ],
+    "cons": [
+      "ERP latency at checkout introduces a blocking call — p99 latency must be < 2s or UX degrades",
+      "Customer Credit UI has limited customisation — complex approval workflows (multi-level PO approval) are not supported natively",
+      "Credit limits must be maintained in both VTEX Customer Credit and ERP — dual-master risk if sync is not automated"
+    ],
+    "scores": {
+      "implementationCost": 3,
+      "operationalCost": 4,
+      "scalability": 3,
+      "maintainability": 3,
+      "vtexNativeAlignment": 4,
+      "timeToMarket": 3,
+      "flexibility": 3
+    },
+    "risks": [
+      {
+        "risk": "ERP API latency at checkout exceeds acceptable threshold",
+        "severity": "High",
+        "mitigation": "Implement async fallback with order hold state and a 3-second timeout. Monitor p95/p99 at ERP API gateway and alert if > 1.5s."
+      },
+      {
+        "risk": "Credit limit dual-master divergence between VTEX and ERP",
+        "severity": "Medium",
+        "mitigation": "Implement a nightly ERP → VTEX Customer Credit sync job. Alert finance team on sync failure."
+      },
+      {
+        "risk": "VTEX Customer Credit does not support partial credit approval",
+        "severity": "Low",
+        "mitigation": "Document this limitation during solution discovery. If partial approval is required, escalate to headless checkout pattern."
+      }
+    ],
+    "recommendedWhen": [
+      "Buyer organization already uses or is open to VTEX Customer Credit",
+      "Net-30 / net-60 terms are the primary non-standard payment requirement",
+      "ERP credit management has a stable REST API with < 1s p95 latency",
+      "Multi-level PO approval workflows are NOT required"
+    ],
+    "avoidWhen": [
+      "Complex multi-level purchase order approval workflows are required",
+      "ERP is not capable of real-time synchronous API responses (batch-only)",
+      "Use case requires partial credit approval at line-item level",
+      "Credit book exceeds 50,000 accounts and real-time sync is not feasible"
+    ]
+  },
+
+  "commerce": {
+    "businessModel": ["B2B"],
+    "accountType": "Standard",
+    "multiAccount": false,
+    "frontend": "Store Framework",
+    "cms": "Site Editor",
+    "channels": ["Web"],
+    "multiLanguage": false,
+    "multiCurrency": false,
+    "tradePolicies": 1,
+    "searchProvider": "VTEX Intelligent Search",
+    "catalogSource": "VTEX Catalog",
+    "hasPricePerCustomer": true,
+    "paymentMethods": ["Customer Credit"],
+    "antiFraud": "VTEX Native",
+    "taxEngine": "VTEX Native",
+    "checkoutType": "VTEX SmartCheckout",
+    "hasSubscriptions": false,
+    "hasGiftCard": false,
+    "hasLoyalty": false,
+    "hasCustomerCredit": true,
+    "omsProvider": "VTEX OMS",
+    "fulfillmentModel": ["Warehouse"],
+    "hasReturnsFlow": false,
+    "multiWarehouse": false,
+    "hasStorePickup": false,
+    "hasSameDayDelivery": false,
+    "hasOrderReconciliation": false,
+    "erp": "ERP",
+    "identityProvider": "VTEX ID",
+    "region": ["US", "CA"],
+    "currency": ["USD", "CAD"],
+    "language": ["en-US"]
+  },
+
+  "classification": {
+    "tags": [
+      "B2B",
+      "Payments",
+      "Customer Credit",
+      "ERP Integration",
+      "Net Terms",
+      "VTEX IO",
+      "Middleware"
+    ],
+    "architecturePattern": "Event-driven middleware with native payment extension",
+    "vtexLayer": ["Checkout", "Payments", "Back-office Integration", "OMS"],
+    "complexity": "Medium",
+    "relatedCases": [],
+    "relatedArchitectures": []
+  }
+}

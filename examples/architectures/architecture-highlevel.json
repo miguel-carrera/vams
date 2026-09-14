@@ -1,0 +1,1588 @@
+{
+  "$schema": "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/solution-architecture.schema.json",
+  "name": "Solution Architecture",
+  "level": "Highlevel",
+  "domain": "E-commerce",
+  "metadata": {
+    "id": "solution-architecture",
+    "version": "1.0.0",
+    "status": "Draft",
+    "createdAt": "2026-02-17T00:00:00.000Z",
+    "createdBy": "Miguel Carrera",
+    "lastModifiedAt": "2026-02-17T00:00:00.000Z",
+    "lastModifiedBy": "Miguel Carrera",
+    "description": "Solution architecture including VTEX platform, merchant backoffice, third-party applications, channels, and front-end touchpoints.",
+    "tags": [
+      "VTEX",
+      "E-commerce",
+      "B2B"
+    ]
+  },
+  "architecture": {
+    "nodes": [
+      {
+        "id": "vtex-platform",
+        "name": "VTEX Platform",
+        "type": "Platform",
+        "description": "VTEX e-commerce platform",
+        "environment": "vtex"
+      },
+      {
+        "id": "b2b-core-modules",
+        "name": "B2B Core Modules",
+        "type": "Group",
+        "parent": "vtex-platform",
+        "description": "B2B core functionality modules",
+        "environment": "vtex"
+      },
+      {
+        "id": "customer-catalog",
+        "name": "Customer Catalog",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "contracts",
+        "name": "Contracts",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "budgets",
+        "name": "Budgets",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "quotes",
+        "name": "Quotes",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "roles-permissions",
+        "name": "Roles & Permissions",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "cost-centers-po-release",
+        "name": "Cost Centers/PO/Release",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "payment-terms",
+        "name": "Payment Terms",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "customer-pricing",
+        "name": "Customer Pricing",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "organization-units",
+        "name": "Organization Units",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "customer-credit",
+        "name": "Customer Credit",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "shipto",
+        "name": "ShipTo",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "users-salesrep",
+        "name": "Users/SalesRep",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "quick-order",
+        "name": "Quick Order",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "approval-workflow",
+        "name": "Approval Workflow",
+        "type": "Component",
+        "parent": "b2b-core-modules",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "vtex-core-services",
+        "name": "VTEX Core Services",
+        "type": "Group",
+        "parent": "vtex-platform",
+        "description": "Core VTEX services",
+        "environment": "vtex"
+      },
+      {
+        "id": "digital-wallet-1",
+        "name": "Digital Wallet",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "digital-wallet-2",
+        "name": "Digital Wallet",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "logistics",
+        "name": "Logistics",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "wishlist",
+        "name": "Wishlist",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "returns",
+        "name": "Returns",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "orders",
+        "name": "Orders",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "promotions",
+        "name": "Promotions",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "subscriptions",
+        "name": "Subscriptions",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "fastcheckout",
+        "name": "FastCheckout",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "payments-gateway",
+        "name": "Payments Gateway",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "message-center",
+        "name": "Message Center",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "master-data",
+        "name": "Master Data",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "catalog",
+        "name": "Catalog",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "pricing",
+        "name": "Pricing",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "authentication-provider",
+        "name": "Authentication Provider",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "inventory",
+        "name": "Inventory",
+        "type": "Component",
+        "parent": "vtex-core-services",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "hcms",
+        "name": "hCMS",
+        "type": "Group",
+        "parent": "vtex-core-services",
+        "description": "Headless CMS group",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "search",
+        "name": "Search",
+        "type": "Group",
+        "parent": "vtex-core-services",
+        "description": "Search services group",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "vtex-io-left",
+        "name": "VTEX IO",
+        "type": "Group",
+        "parent": "vtex-platform",
+        "description": "VTEX IO services (left instance)",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "io-contract-updates-service",
+        "name": "IO contract updates service",
+        "type": "Component",
+        "parent": "vtex-io-left",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "vtex-io-right",
+        "name": "VTEX IO",
+        "type": "Group",
+        "parent": "vtex-platform",
+        "description": "VTEX IO services (right instance)",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "io-headless-validation",
+        "name": "IO headless validation",
+        "type": "Component",
+        "parent": "vtex-io-right",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "io-event-service",
+        "name": "IO event service",
+        "type": "Component",
+        "parent": "vtex-io-right",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "io-fulfillment-service",
+        "name": "IO fulfillment service",
+        "type": "Component",
+        "parent": "vtex-io-right",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "io-order-integration",
+        "name": "IO order integration",
+        "type": "Component",
+        "parent": "vtex-io-right",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "io-hosted-catalog-tool",
+        "name": "IO hosted catalog tool",
+        "type": "Component",
+        "parent": "vtex-io-right",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "io-business-rules",
+        "name": "IO business rules",
+        "type": "Component",
+        "parent": "vtex-io-right",
+        "environment": "vtex-io"
+      },
+      {
+        "id": "customer-integration",
+        "name": "Customer Integration",
+        "type": "Middleware",
+        "environment": "merchant"
+      },
+      {
+        "id": "catalog-integration",
+        "name": "Catalog Integration",
+        "type": "Middleware",
+        "environment": "merchant"
+      },
+      {
+        "id": "price-integration",
+        "name": "Price Integration",
+        "type": "Middleware",
+        "environment": "merchant"
+      },
+      {
+        "id": "vtex-data-pipeline",
+        "name": "VTEX Data Pipeline",
+        "type": "Middleware",
+        "parent": "vtex-platform",
+        "environment": "vtex",
+        "implementation": "Native"
+      },
+      {
+        "id": "integration-layer",
+        "name": "Integration Layer",
+        "type": "Middleware",
+        "environment": "integration"
+      },
+      {
+        "id": "finance-middleware",
+        "name": "Finance Middleware",
+        "type": "Middleware",
+        "environment": "merchant"
+      },
+      {
+        "id": "merchant-backoffice",
+        "name": "Merchant BackOffice",
+        "type": "Group",
+        "description": "Merchant back-office systems",
+        "environment": "merchant"
+      },
+      {
+        "id": "data-warehouse",
+        "name": "Data Warehouse",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "external"
+      },
+      {
+        "id": "marketing-automation",
+        "name": "Marketing Automation",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "external"
+      },
+      {
+        "id": "crm",
+        "name": "CRM",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "external"
+      },
+      {
+        "id": "pim",
+        "name": "PIM",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "external"
+      },
+      {
+        "id": "asset-management-system",
+        "name": "Asset Management System",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "product-data-layer",
+        "name": "Product Data Layer",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "digital-asset-management",
+        "name": "Digital Asset Management",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "external"
+      },
+      {
+        "id": "product-data-source",
+        "name": "Product Data Source",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "contract-pricing-engine",
+        "name": "Contract Pricing Engine",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "retail-erp",
+        "name": "Retail ERP",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "price-intelligence",
+        "name": "Price Intelligence",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "price-optimization",
+        "name": "Price Optimization",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "oms",
+        "name": "OMS",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "oms"
+      },
+      {
+        "id": "erp",
+        "name": "ERP",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "wms-legacy",
+        "name": "WMS - Legacy",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "logistics-tracking",
+        "name": "Logistics Tracking",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "wms-primary",
+        "name": "WMS",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "transportation-management",
+        "name": "Transportation Management",
+        "type": "System",
+        "parent": "merchant-backoffice",
+        "environment": "merchant"
+      },
+      {
+        "id": "third-party-back-frontend",
+        "name": "3rd Party Back/Front-End",
+        "type": "Group",
+        "description": "Third-party back-end and front-end applications",
+        "environment": "external"
+      },
+      {
+        "id": "web-analytics",
+        "name": "Web Analytics",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "tag-manager",
+        "name": "Tag Manager",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "reviews-platform",
+        "name": "Reviews Platform",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "accessibility-platform",
+        "name": "Accessibility Platform",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "compliance-monitoring",
+        "name": "Compliance Monitoring",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "service-cloud",
+        "name": "Service Cloud",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "identity-verification",
+        "name": "Identity Verification",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "list-management",
+        "name": "List Management",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "marketing-platform",
+        "name": "Marketing Platform",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "payment-processor",
+        "name": "Payment Processor",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "address-validation",
+        "name": "Address Validation",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "cx-platform",
+        "name": "CX Platform",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "product-content-hub",
+        "name": "Product Content Hub",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "print-fulfillment",
+        "name": "Print Fulfillment",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "digital-experience-analytics",
+        "name": "Digital Experience Analytics",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "advertising-platform",
+        "name": "Advertising Platform",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "revenue-optimization",
+        "name": "Revenue Optimization",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "affiliate-network",
+        "name": "Affiliate Network",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "payment-wallet",
+        "name": "Payment Wallet",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "fraud-prevention",
+        "name": "Fraud Prevention",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "experience-management",
+        "name": "Experience Management",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "consent-management",
+        "name": "Consent Management",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "checkout-optimization",
+        "name": "Checkout Optimization",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "design-tool",
+        "name": "Design Tool",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "personalization-engine",
+        "name": "Personalization Engine",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "enterprise-identity",
+        "name": "Enterprise Identity",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "loyalty-platform",
+        "name": "Loyalty Platform",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "b2b-partner-portal",
+        "name": "B2B Partner Portal",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "tax-calculation",
+        "name": "Tax Calculation",
+        "type": "Application",
+        "parent": "third-party-back-frontend",
+        "environment": "external"
+      },
+      {
+        "id": "additional-channels",
+        "name": "Additional Channels",
+        "type": "Group",
+        "description": "Additional sales channels",
+        "environment": "external"
+      },
+      {
+        "id": "federated-partners",
+        "name": "Federated Partners",
+        "type": "Component",
+        "parent": "additional-channels",
+        "environment": "external"
+      },
+      {
+        "id": "private-marketplaces",
+        "name": "Private Marketplaces",
+        "type": "Component",
+        "parent": "additional-channels",
+        "environment": "external"
+      },
+      {
+        "id": "marketplace-integration",
+        "name": "Marketplace Integration",
+        "type": "Component",
+        "parent": "additional-channels",
+        "environment": "external"
+      },
+      {
+        "id": "hosted-catalog",
+        "name": "Hosted Catalog",
+        "type": "Component",
+        "parent": "additional-channels",
+        "environment": "external"
+      },
+      {
+        "id": "same-day-delivery",
+        "name": "Same-Day Delivery",
+        "type": "Component",
+        "parent": "additional-channels",
+        "environment": "external"
+      },
+      {
+        "id": "others-channels",
+        "name": "Others",
+        "type": "Component",
+        "parent": "additional-channels",
+        "environment": "external"
+      },
+      {
+        "id": "public-marketplace",
+        "name": "Public Marketplace",
+        "type": "Group",
+        "description": "Public marketplace applications",
+        "environment": "external"
+      },
+      {
+        "id": "public-marketplace-a",
+        "name": "Public Marketplace A",
+        "type": "Application",
+        "parent": "public-marketplace",
+        "environment": "external"
+      },
+      {
+        "id": "public-marketplace-b",
+        "name": "Public Marketplace B",
+        "type": "Application",
+        "parent": "public-marketplace",
+        "environment": "external"
+      },
+      {
+        "id": "public-marketplace-c",
+        "name": "Public Marketplace C",
+        "type": "Application",
+        "parent": "public-marketplace",
+        "environment": "external"
+      },
+      {
+        "id": "marketplace-connector",
+        "name": "Marketplace Connector",
+        "type": "Application",
+        "environment": "external"
+      },
+      {
+        "id": "integration-platform",
+        "name": "Integration Platform",
+        "type": "Application",
+        "environment": "merchant"
+      },
+      {
+        "id": "channel-integration",
+        "name": "Channel Integration",
+        "type": "Middleware",
+        "environment": "integration"
+      },
+      {
+        "id": "eprocurement-accounts",
+        "name": "eProcurement Accounts",
+        "type": "Group",
+        "description": "eProcurement accounts",
+        "environment": "external"
+      },
+      {
+        "id": "merchant-frontend",
+        "name": "Merchant FrontEnd",
+        "type": "Group",
+        "description": "Merchant customer-facing front-end channels",
+        "environment": "merchant"
+      },
+      {
+        "id": "point-of-sale",
+        "name": "Point of Sale",
+        "type": "Application",
+        "parent": "merchant-frontend",
+        "environment": "merchant"
+      },
+      {
+        "id": "b2b-mobile-app",
+        "name": "B2B Mobile App",
+        "type": "Component",
+        "parent": "merchant-frontend",
+        "description": "B2B mobile app (webview)",
+        "environment": "vtex"
+      },
+      {
+        "id": "cs-application",
+        "name": "CS Application (Customer Service)",
+        "type": "Application",
+        "parent": "merchant-frontend",
+        "environment": "vtex"
+      },
+      {
+        "id": "webstore-b2b",
+        "name": "Webstore B2B",
+        "type": "Component",
+        "parent": "merchant-frontend",
+        "environment": "vtex"
+      },
+      {
+        "id": "cdn-waf",
+        "name": "CDN + WAF",
+        "type": "Component",
+        "parent": "webstore-b2b",
+        "environment": "vtex"
+      },
+      {
+        "id": "faststore",
+        "name": "Faststore",
+        "type": "Component",
+        "parent": "webstore-b2b",
+        "environment": "vtex"
+      },
+      {
+        "id": "punchout",
+        "name": "Punchout",
+        "type": "Component",
+        "parent": "webstore-b2b",
+        "environment": "vtex"
+      }
+    ],
+    "flows": [
+      {
+        "id": "f-point-of-sale-vtex-platform",
+        "type": "Data",
+        "origin": "point-of-sale",
+        "destination": "vtex-platform",
+        "timing": "Real-Time",
+        "data": [
+          "place-loyalty-order"
+        ]
+      },
+      {
+        "id": "f-cs-application-vtex-platform",
+        "type": "Data",
+        "origin": "cs-application",
+        "destination": "vtex-platform",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-faststore-vtex-platform",
+        "type": "Data",
+        "origin": "faststore",
+        "destination": "vtex-platform",
+        "timing": "Real-Time",
+        "data": []
+      },
+      {
+        "id": "f-vtex-platform-faststore",
+        "type": "Data",
+        "origin": "vtex-platform",
+        "destination": "faststore",
+        "timing": "Real-Time",
+        "data": []
+      },
+      {
+        "id": "f-faststore-punchout",
+        "type": "Data",
+        "origin": "faststore",
+        "destination": "punchout",
+        "timing": "Real-Time",
+        "data": []
+      },
+      {
+        "id": "f-punchout-faststore",
+        "type": "Data",
+        "origin": "punchout",
+        "destination": "faststore",
+        "timing": "Real-Time",
+        "data": []
+      },
+      {
+        "id": "f-punchout-eprocurement-accounts",
+        "type": "Data",
+        "origin": "punchout",
+        "destination": "eprocurement-accounts",
+        "timing": "Real-Time",
+        "data": [
+          "cart"
+        ]
+      },
+      {
+        "id": "f-integration-platform-punchout",
+        "type": "Data",
+        "origin": "integration-platform",
+        "destination": "punchout",
+        "timing": "Real-Time",
+        "data": [
+          "session"
+        ]
+      },
+      {
+        "id": "f-additionalchannels-eprocurement-accounts",
+        "type": "Data",
+        "origin": "additional-channels",
+        "destination": "eprocurement-accounts",
+        "timing": "Async",
+        "data": [
+          "catalog"
+        ]
+      },
+      {
+        "id": "f-eprocurement-accounts-integration-platform",
+        "type": "Data",
+        "origin": "eprocurement-accounts",
+        "destination": "integration-platform",
+        "timing": "Async",
+        "data": [
+          "order"
+        ]
+      },
+      {
+        "id": "f-channel-integration-additionalchannels",
+        "type": "Data",
+        "origin": "channel-integration",
+        "destination": "additional-channels",
+        "timing": "Async",
+        "data": [
+          "product,price,availability"
+        ]
+      },
+      {
+        "id": "f-channel-integration-channeladvisor",
+        "type": "Data",
+        "origin": "channel-integration",
+        "destination": "marketplace-connector",
+        "timing": "Async",
+        "data": [
+          "product,price,availability"
+        ]
+      },
+      {
+        "id": "f-vtex-platform-channel-integration",
+        "type": "Data",
+        "origin": "vtex-platform",
+        "destination": "channel-integration",
+        "timing": "Async",
+        "data": [
+          "product,price"
+        ]
+      },
+      {
+        "id": "f-vtex-platform-channel-integration",
+        "type": "Data",
+        "origin": "vtex-io-right",
+        "destination": "channel-integration",
+        "timing": "Async",
+        "data": [
+          "assortment"
+        ]
+      },
+      {
+        "id": "f-publicmarketplace-channeladvisor",
+        "type": "Data",
+        "origin": "public-marketplace",
+        "destination": "marketplace-connector",
+        "timing": "Async",
+        "data": [
+          "order"
+        ]
+      },
+      {
+        "id": "f-channeladvisor-publicmarketplace",
+        "type": "Data",
+        "origin": "marketplace-connector",
+        "destination": "public-marketplace",
+        "timing": "Async",
+        "data": [
+          "product,price,availability"
+        ]
+      },
+      {
+        "id": "f-channeladvisor-integration-platform",
+        "type": "Data",
+        "origin": "marketplace-connector",
+        "destination": "integration-platform",
+        "timing": "Async",
+        "data": [
+          "order"
+        ]
+      },
+      {
+        "id": "f-integration-platform-channeladvisor",
+        "type": "Data",
+        "origin": "integration-platform",
+        "destination": "marketplace-connector",
+        "timing": "Async",
+        "data": [
+          "order-notification"
+        ]
+      },
+      {
+        "id": "f-integration-platform-vtex-io-right",
+        "type": "Data",
+        "origin": "integration-platform",
+        "destination": "vtex-io-right",
+        "timing": "Async",
+        "data": [
+          "place-order"
+        ]
+      },
+      {
+        "id": "f-integration-platform-vtex-io-right-2",
+        "type": "Data",
+        "origin": "integration-platform",
+        "destination": "vtex-io-right",
+        "timing": "Real-Time",
+        "data": [
+          "price",
+          "availability"
+        ]
+      },
+      {
+        "id": "f-vtex-io-right-integration-platform",
+        "type": "Data",
+        "origin": "vtex-io-right",
+        "destination": "integration-platform",
+        "timing": "Async",
+        "data": [
+          "order-notification"
+        ]
+      },
+      {
+        "id": "f-vtex-io-right-third-party-back-frontend",
+        "type": "Data",
+        "origin": "vtex-io-right",
+        "destination": "third-party-back-frontend",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-vtex-io-right-third-party-back-frontend-2",
+        "type": "Data",
+        "origin": "vtex-io-right",
+        "destination": "third-party-back-frontend",
+        "timing": "Real-Time",
+        "data": [
+          "payment-data",
+          "antifraud-data",
+          "taxes-data"
+        ]
+      },
+      {
+        "id": "f-vtex-io-right-oms",
+        "type": "Data",
+        "origin": "vtex-io-right",
+        "destination": "oms",
+        "timing": "Async",
+        "data": [
+          "order",
+          "return"
+        ]
+      },
+      {
+        "id": "f-oms-vtex-io-right",
+        "type": "Data",
+        "origin": "oms",
+        "destination": "vtex-io-right",
+        "timing": "Async",
+        "data": [
+          "order-notification",
+          "returns-notification"
+        ]
+      },
+      {
+        "id": "f-vtex-io-right-oms-2",
+        "type": "Data",
+        "origin": "oms",
+        "destination": "vtex-io-right",
+        "timing": "Real-Time",
+        "data": [
+          "availability",
+          "edd"
+        ]
+      },
+      {
+        "id": "f-vtex-platform-integration-layer",
+        "type": "Data",
+        "origin": "vtex-platform",
+        "destination": "integration-layer",
+        "timing": "Async",
+        "data": [
+          "catalog"
+        ]
+      },
+      {
+        "id": "f-oms-integration-layer",
+        "type": "Data",
+        "origin": "oms",
+        "destination": "integration-layer",
+        "timing": "Async",
+        "data": [
+          "inventory"
+        ]
+      },
+      {
+        "id": "f-integration-layer-oms",
+        "type": "Data",
+        "origin": "integration-layer",
+        "destination": "oms",
+        "timing": "Async",
+        "data": [
+          "catalog"
+        ]
+      },
+      {
+        "id": "f-oms-wms-legacy",
+        "type": "Data",
+        "origin": "oms",
+        "destination": "wms-legacy",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-oms-wms-primary",
+        "type": "Data",
+        "origin": "oms",
+        "destination": "wms-primary",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-oms-logistics-tracking",
+        "type": "Data",
+        "origin": "oms",
+        "destination": "logistics-tracking",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-oms-finance-middleware",
+        "type": "Data",
+        "origin": "oms",
+        "destination": "finance-middleware",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-vtex-io-right-finance-middleware",
+        "type": "Data",
+        "origin": "vtex-io-right",
+        "destination": "finance-middleware",
+        "timing": "Async",
+        "data": [
+          "transaction-data"
+        ]
+      },
+      {
+        "id": "f-vtex-platform-finance-middleware",
+        "type": "Data",
+        "origin": "vtex-platform",
+        "destination": "finance-middleware",
+        "timing": "Async",
+        "data": [
+          "reconciliation-data"
+        ]
+      },
+      {
+        "id": "f-finance-middleware",
+        "type": "Data",
+        "origin": "finance-middleware",
+        "destination": "erp",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-vtex-platform-vtex-data-pipeline",
+        "type": "Data",
+        "origin": "vtex-platform",
+        "destination": "vtex-data-pipeline",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-vtex-data-pipeline-data-warehouse",
+        "type": "Data",
+        "origin": "vtex-data-pipeline",
+        "destination": "data-warehouse",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-priceintegration-pricing",
+        "type": "Data",
+        "origin": "price-integration",
+        "destination": "pricing",
+        "timing": "Async",
+        "data": [
+          "price"
+        ]
+      },
+      {
+        "id": "f-contract-pricing-engine-price-integration",
+        "type": "Data",
+        "origin": "contract-pricing-engine",
+        "destination": "price-integration",
+        "timing": "Async",
+        "data": [
+          "price-list",
+          "contract-price"
+        ]
+      },
+      {
+        "id": "f-retail-erp-price-integration",
+        "type": "Data",
+        "origin": "retail-erp",
+        "destination": "price-integration",
+        "timing": "Async",
+        "data": [
+          "cost-price",
+          "base-price",
+          "zone-price"
+        ]
+      },
+      {
+        "id": "f-retail-erp-contract-pricing-engine",
+        "type": "Data",
+        "origin": "retail-erp",
+        "destination": "contract-pricing-engine",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-price-optimization-retail-erp",
+        "type": "Data",
+        "origin": "price-optimization",
+        "destination": "retail-erp",
+        "timing": "Async",
+        "data": [
+          "base-price"
+        ]
+      },
+      {
+        "id": "f-price-intelligence-price-optimization",
+        "type": "Data",
+        "origin": "price-intelligence",
+        "destination": "price-optimization",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-retail-erp-catalog-integration",
+        "type": "Data",
+        "origin": "retail-erp",
+        "destination": "catalog-integration",
+        "timing": "Async",
+        "data": [
+          "product-attributes"
+        ]
+      },
+      {
+        "id": "f-pim-catalog-integration",
+        "type": "Data",
+        "origin": "pim",
+        "destination": "catalog-integration",
+        "timing": "Async",
+        "data": [
+          "category",
+          "product",
+          "attributes"
+        ]
+      },
+      {
+        "id": "f-catalog-integration-catalog",
+        "type": "Data",
+        "origin": "catalog-integration",
+        "destination": "catalog",
+        "timing": "Async",
+        "data": [
+          "category",
+          "product",
+          "attributes"
+        ]
+      },
+      {
+        "id": "f-pim-asset-management-system",
+        "type": "Data",
+        "origin": "pim",
+        "destination": "asset-management-system",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-product-data-layer-pim",
+        "type": "Data",
+        "origin": "product-data-layer",
+        "destination": "pim",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-product-data-source-product-data-layer",
+        "type": "Data",
+        "origin": "product-data-source",
+        "destination": "product-data-layer",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-asset-management-system-digital-asset-management",
+        "type": "Data",
+        "origin": "asset-management-system",
+        "destination": "digital-asset-management",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-crm-io-contract-updates-service",
+        "type": "Data",
+        "origin": "crm",
+        "destination": "io-contract-updates-service",
+        "timing": "Async",
+        "data": [
+          "new-account-data"
+        ]
+      },
+      {
+        "id": "f-io-contract-updates-service-crm",
+        "type": "Data",
+        "origin": "io-contract-updates-service",
+        "destination": "crm",
+        "timing": "Async",
+        "data": [
+          "contract-data"
+        ]
+      },
+      {
+        "id": "f-",
+        "type": "Data",
+        "origin": "vtex-platform",
+        "destination": "customer-integration",
+        "timing": "Async",
+        "data": []
+      },
+      {
+        "id": "f-customer-integration-marketing-platform",
+        "type": "Data",
+        "origin": "customer-integration",
+        "destination": "marketing-platform",
+        "timing": "Async",
+        "data": []
+      }
+    ],
+    "dataEntities": [
+      {
+        "id": "place-loyalty-order",
+        "name": "Place Loyalty Order"
+      },
+      {
+        "id": "place-order",
+        "name": "Place Order"
+      },
+      {
+        "id": "order-notification",
+        "name": "Order notification"
+      },
+      {
+        "id": "inventory",
+        "name": "Inventory"
+      },
+      {
+        "id": "order",
+        "name": "Order"
+      },
+      {
+        "id": "contract-data",
+        "name": "Contract Data"
+      },
+      {
+        "id": "payment-data",
+        "name": "Payment Data"
+      },
+      {
+        "id": "catalog",
+        "name": "Catalog"
+      },
+      {
+        "id": "product-attributes",
+        "name": "Product Attributes"
+      },
+      {
+        "id": "contract-price",
+        "name": "Contract Price"
+      },
+      {
+        "id": "transaction-data",
+        "name": "Transaction Data"
+      },
+      {
+        "id": "product",
+        "name": "Product"
+      },
+      {
+        "id": "availability",
+        "name": "Availability"
+      },
+      {
+        "id": "cart",
+        "name": "Cart"
+      },
+      {
+        "id": "session",
+        "name": "Session"
+      },
+      {
+        "id": "price",
+        "name": "Price"
+      },
+      {
+        "id": "antifraud-data",
+        "name": "Antifraud Data"
+      },
+      {
+        "id": "taxes-data",
+        "name": "Taxes Data"
+      },
+      {
+        "id": "edd",
+        "name": "EDD"
+      },
+      {
+        "id": "assortment",
+        "name": "Assortment"
+      },
+      {
+        "id": "reconciliation-data",
+        "name": "Reconciliation Data"
+      },
+      {
+        "id": "cost-price",
+        "name": "Cost Price"
+      },
+      {
+        "id": "base-price",
+        "name": "Base Price"
+      },
+      {
+        "id": "zone-price",
+        "name": "Zone Price"
+      },
+      {
+        "id": "category",
+        "name": "Category"
+      },
+      {
+        "id": "attributes",
+        "name": "Attributes"
+      },
+      {
+        "id": "new-account-data",
+        "name": "New Accounts Data"
+      },
+      {
+        "id": "return",
+        "name": "Return"
+      },
+      {
+        "id": "returns-notification",
+        "name": "Returns Notification"
+      },
+      {
+        "id": "price-list",
+        "name": "Price List"
+      }
+    ],
+    "environments": [
+      {
+        "id": "vtex",
+        "name": "VTEX",
+        "description": "VTEX platform runtime environment"
+      },
+      {
+        "id": "vtex-io",
+        "name": "VTEX IO",
+        "description": "VTEX IO runtime environment"
+      },
+      {
+        "id": "integration",
+        "name": "Integration Layer",
+        "description": "Integration layer runtime environment"
+      },
+      {
+        "id": "oms",
+        "name": "OMS",
+        "description": "OMS platform runtime environment"
+      },
+      {
+        "id": "merchant",
+        "name": "Merchant",
+        "description": "Merchant internal infrastructure"
+      },
+      {
+        "id": "external",
+        "name": "External",
+        "description": "External runtime environments"
+      }
+    ]
+  }
+}

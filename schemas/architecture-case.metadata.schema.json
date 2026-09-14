@@ -1,0 +1,909 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/architecture-case.metadata.schema.json",
+  "title": "Architecture Case Metadata",
+  "description": "Metadata sidecar for VAMS architecture case documents (.docx or .md). One JSON per document, same base filename. Drives both SA discoverability and automated Atlas tooling.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "id",
+    "title",
+    "docxFile",
+    "version",
+    "status",
+    "createdAt",
+    "createdBy",
+    "context",
+    "solution",
+    "tradeoffs",
+    "classification",
+    "commerce"
+  ],
+
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/architecture-case.metadata.schema.json"
+    },
+
+    "id": {
+      "type": "string",
+      "pattern": "^case-[a-z0-9-]+$",
+      "description": "Unique kebab-case identifier. Must start with 'case-'. Must match the document/json base filename. Example: case-b2b-split-payment"
+    },
+
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 120,
+      "description": "Human-readable case title. Used as the primary search anchor and display label."
+    },
+
+    "docxFile": {
+      "type": "string",
+      "pattern": "^case-[a-z0-9-]+\\.(docx|md)$",
+      "description": "Filename of the associated document file (basename only, no path). Must match the id. Accepts .docx or .md. Examples: case-b2b-split-payment.docx, case-b2b-split-payment.md"
+    },
+
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this case document. Bump MINOR for content updates, PATCH for corrections."
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Review", "Approved", "Deprecated"],
+      "description": "Lifecycle state. Automated tooling only indexes Approved cases by default."
+    },
+
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 creation timestamp."
+    },
+
+    "createdBy": {
+      "type": "string",
+      "description": "Full name or SA alias of the original author."
+    },
+
+    "lastModifiedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "lastModifiedBy": {
+      "type": "string"
+    },
+
+    "context": { "$ref": "#/$defs/context" },
+    "solution": { "$ref": "#/$defs/solution" },
+    "tradeoffs": { "$ref": "#/$defs/tradeoffs" },
+    "classification": { "$ref": "#/$defs/classification" },
+    "commerce": {
+      "$ref": "#/$defs/commerce",
+      "description": "Structured e-commerce technology profile of the solution. Pure filter signal — not in the docx. Enables pre-filtering before vector search and cross-case comparison in Atlas tooling."
+    },
+    "vectorStore": {
+      "$ref": "#/$defs/vectorStore",
+      "description": "Pipeline-managed. Written by the RAG ingestion pipeline after vectorisation. Never authored by SAs."
+    }
+  },
+
+  "$defs": {
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The problem space. Describes the customer situation that motivates the case.",
+      "required": [
+        "industry",
+        "businessModel",
+        "region",
+        "customerSize",
+        "summary",
+        "painPoints"
+      ],
+      "properties": {
+        "industry": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Industries the customer operates in. Used as a primary facet filter.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Retail",
+              "Wholesale",
+              "Fashion & Apparel",
+              "Electronics & Technology",
+              "Food & Beverage",
+              "Healthcare & Pharma",
+              "Manufacturing",
+              "Financial Services",
+              "Telco & Media",
+              "Marketplace",
+              "Automotive",
+              "Home & Garden",
+              "Sports & Outdoors",
+              "Other"
+            ]
+          }
+        },
+
+        "businessModel": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Business models in scope for this case.",
+          "items": {
+            "type": "string",
+            "enum": ["B2C", "B2B", "B2B2C", "D2C", "Marketplace"]
+          }
+        },
+
+        "region": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "ISO 3166-1 alpha-2 country codes relevant to this case.",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          }
+        },
+
+        "customerSize": {
+          "type": "string",
+          "enum": ["SMB", "Mid-Market", "Enterprise"],
+          "description": "Approximate size of the customer this case applies to. Used for scoping and discoverability."
+        },
+
+        "summary": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 500,
+          "description": "One-paragraph description of the business problem and its origin. This is the primary full-text search field for the context group."
+        },
+
+        "painPoints": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Specific pain points or challenges the customer faced. Each item is a short statement (one sentence max).",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 200
+          }
+        },
+
+        "constraints": {
+          "type": "array",
+          "description": "Technical, business, or organisational constraints that shaped the solution. Optional but strongly recommended.",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 200
+          }
+        }
+      }
+    },
+
+    "solution": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The proposed solution. Captures pattern, technologies, decisions, and implementation details.",
+      "required": [
+        "pattern",
+        "summary",
+        "vtexProducts",
+        "implementationComplexity"
+      ],
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "Short name of the architectural pattern applied. Used as a facet filter and display label. Examples: 'Event-driven middleware', 'Headless checkout', 'Franchise account topology'."
+        },
+
+        "summary": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 600,
+          "description": "Concise description of the proposed solution — what was built, how it works, and why this approach was chosen. Primary full-text search field for the solution group."
+        },
+
+        "vtexProducts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "VTEX products and capabilities central to this solution. Free-form to avoid schema churn as the product catalogue evolves.",
+          "items": {
+            "type": "string",
+            "minLength": 2
+          }
+        },
+
+        "externalIntegrations": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "Third-party systems or services integrated in this solution (ERP, WMS, PIM, PSP, etc.).",
+          "items": {
+            "type": "string",
+            "minLength": 2
+          }
+        },
+
+        "architectureFileRef": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+\\.json$",
+          "description": "Filename (basename only) of the associated VAMS architecture JSON file, if one exists. Example: b2b-customer-credit.json"
+        },
+
+        "keyDecisions": {
+          "type": "array",
+          "description": "The most important architectural decisions made in this solution. Each entry captures the decision and its rationale — the parts that don't fit in the pattern name or summary.",
+          "items": { "$ref": "#/$defs/architectureDecision" }
+        },
+
+        "implementationComplexity": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High"],
+          "description": "Overall implementation complexity as assessed by the authoring SA. Used for tooling filters and comparison."
+        },
+
+        "estimatedTimeline": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Indicative delivery timeline. Free-form (e.g. '6–10 weeks', '3 months'). Not a commitment."
+        },
+
+        "implementationNotes": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Optional. Key gotchas, sequencing advice, or configuration notes that SAs should know before attempting this pattern."
+        }
+      }
+    },
+
+    "architectureDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "rationale"],
+      "properties": {
+        "decision": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 200,
+          "description": "What was decided. State it as a fact, not a question. Example: 'Use VTEX IO middleware instead of an external integration layer'."
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 400,
+          "description": "Why this decision was made. Include what was traded away."
+        },
+        "alternativesConsidered": {
+          "type": "array",
+          "description": "Other options that were evaluated and rejected.",
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 200
+          }
+        }
+      }
+    },
+
+    "tradeoffs": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Structured analysis of the solution. Drives both human review and automated scoring/comparison tooling.",
+      "required": ["pros", "cons", "scores"],
+      "properties": {
+        "pros": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Benefits and advantages of this solution. Each item is a concrete statement (not generic).",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          }
+        },
+
+        "cons": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Drawbacks, limitations, or trade-offs of this solution. Must be honest — cases with no cons will be rejected in review.",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          }
+        },
+
+        "scores": {
+          "$ref": "#/$defs/tradeoffScores"
+        },
+
+        "risks": {
+          "type": "array",
+          "description": "Known risks associated with this solution pattern.",
+          "items": { "$ref": "#/$defs/risk" }
+        },
+
+        "recommendedWhen": {
+          "type": "array",
+          "description": "Conditions under which this solution is a good fit. Used by Atlas tooling to surface relevant cases.",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          }
+        },
+
+        "avoidWhen": {
+          "type": "array",
+          "description": "Conditions under which this solution should NOT be used. Critical for automated tooling to filter out mismatched cases.",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          }
+        }
+      }
+    },
+
+    "tradeoffScores": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Structured 1–5 scores for key dimensions. 1 = poor/expensive/slow, 5 = excellent/cheap/fast. All required to enable cross-case comparison in Atlas tooling.",
+      "required": [
+        "implementationCost",
+        "operationalCost",
+        "scalability",
+        "maintainability",
+        "vtexNativeAlignment",
+        "timeToMarket",
+        "flexibility"
+      ],
+      "properties": {
+        "implementationCost": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = very expensive to implement, 5 = very cheap. Consider dev time, licences, and infrastructure."
+        },
+        "operationalCost": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = high ongoing cost (custom infra, manual ops), 5 = low (fully managed, no overhead)."
+        },
+        "scalability": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = does not scale (tightly coupled, stateful), 5 = scales horizontally with no architectural changes."
+        },
+        "maintainability": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = hard to maintain (custom code, brittle integrations), 5 = easy (native APIs, well-documented patterns)."
+        },
+        "vtexNativeAlignment": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = heavily customised or external (high upgrade risk), 5 = fully native VTEX with no customisation."
+        },
+        "timeToMarket": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = slow (6+ months), 5 = fast (< 4 weeks). Based on estimatedTimeline."
+        },
+        "flexibility": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = locks the customer into a single pattern (hard to change), 5 = easily adapted or replaced without major rework."
+        }
+      }
+    },
+
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["risk", "severity"],
+      "properties": {
+        "risk": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 200,
+          "description": "Description of the risk."
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High", "Critical"],
+          "description": "Potential impact if the risk materialises."
+        },
+        "mitigation": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Recommended mitigation strategy. Optional but strongly recommended for High and Critical risks."
+        }
+      }
+    },
+
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Discoverability and cross-referencing metadata. Critical for both search and automated Atlas indexing.",
+      "required": ["tags", "vtexLayer"],
+      "properties": {
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Free-form keywords for full-text search. Use consistently across the case library (e.g. 'B2B', 'Payments', 'ERP Integration').",
+          "items": { "type": "string", "minLength": 2, "maxLength": 50 }
+        },
+        "architecturePattern": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "High-level architectural pattern name. Should match solution.pattern unless the classification-level name is more abstract."
+        },
+        "vtexLayer": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "VTEX platform layers touched by this solution. Used as a primary facet filter in Atlas.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Storefront",
+              "Checkout",
+              "Payments",
+              "OMS",
+              "Catalog",
+              "Search",
+              "Back-office Integration",
+              "Data & Analytics",
+              "Identity & Access",
+              "Marketplace",
+              "Infrastructure"
+            ]
+          }
+        },
+        "complexity": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High"],
+          "description": "Denormalised from solution.implementationComplexity for tooling convenience. Must match."
+        },
+        "relatedCases": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "IDs of other architecture cases that are related.",
+          "items": { "type": "string", "pattern": "^case-[a-z0-9-]+$" }
+        },
+        "relatedArchitectures": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "Filenames (basename only) of VAMS solution architecture JSON files that relate to this case.",
+          "items": { "type": "string", "pattern": "^[a-z0-9-]+\\.json$" }
+        },
+        "supersedes": {
+          "type": "string",
+          "pattern": "^case-[a-z0-9-]+$",
+          "description": "ID of an older case that this one replaces."
+        },
+        "supersededBy": {
+          "type": "string",
+          "pattern": "^case-[a-z0-9-]+$",
+          "description": "ID of a newer case that replaces this one. Set when status = Deprecated."
+        }
+      },
+      "if": {
+        "properties": { "status": { "const": "Deprecated" } },
+        "required": ["status"]
+      },
+      "then": { "required": ["supersededBy"] }
+    },
+
+    "commerce": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Structured e-commerce technology profile of the solution. All properties optional to allow incremental adoption. This block is the pre-filter layer for RAG retrieval — it is NOT duplicated in the docx.",
+      "properties": {
+        "businessModel": {
+          "type": "array",
+          "description": "One or more business models covered by this architecture.",
+          "items": {
+            "type": "string",
+            "enum": ["B2C", "B2B", "B2B2C", "D2C", "Marketplace"]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+
+        "accountType": {
+          "type": "string",
+          "description": "VTEX account topology. 'Standard' = single merchant. 'Marketplace' = covers the marketplace account and all its sellers.",
+          "enum": ["Standard", "Marketplace"]
+        },
+
+        "sellerType": {
+          "type": "array",
+          "description": "Types of sellers present. Only relevant when accountType is 'Marketplace'.",
+          "items": {
+            "type": "string",
+            "enum": ["1P", "3P", "Franchise", "WhiteLabel"]
+          },
+          "uniqueItems": true
+        },
+
+        "multiAccount": {
+          "type": "boolean",
+          "description": "True when the implementation spans multiple VTEX accounts (e.g. franchise networks, sub-accounts per region)."
+        },
+
+        "marketplace": {
+          "$ref": "#/$defs/marketplaceGovernance",
+          "description": "Marketplace governance rules. Required when accountType is 'Marketplace'."
+        },
+
+        "frontend": {
+          "type": "string",
+          "description": "Primary storefront technology.",
+          "enum": [
+            "Store Framework",
+            "FastStore",
+            "Headless",
+            "PWA",
+            "Sales App",
+            "Embedded"
+          ]
+        },
+
+        "cms": {
+          "type": "string",
+          "description": "Content management system in use.",
+          "enum": ["Site Editor", "Headless CMS", "External CMS", "None"]
+        },
+
+        "channels": {
+          "type": "array",
+          "description": "Customer-facing sales and interaction channels covered by this architecture.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Web",
+              "Mobile App",
+              "PWA",
+              "POS",
+              "Call Center",
+              "IoT",
+              "Conversational",
+              "Live Shopping"
+            ]
+          },
+          "uniqueItems": true
+        },
+
+        "cdn": {
+          "type": "string",
+          "description": "CDN provider used for storefront delivery.",
+          "enum": [
+            "VTEX Native",
+            "Cloudflare",
+            "Akamai",
+            "AWS CloudFront",
+            "Custom"
+          ]
+        },
+
+        "multiLanguage": {
+          "type": "boolean",
+          "description": "True when the implementation serves content in more than one language."
+        },
+
+        "multiCurrency": {
+          "type": "boolean",
+          "description": "True when the implementation supports more than one currency."
+        },
+
+        "tradePolicies": {
+          "type": "integer",
+          "description": "Number of VTEX trade policies configured in this architecture.",
+          "minimum": 1
+        },
+
+        "searchProvider": {
+          "type": "string",
+          "description": "Search and discovery engine in use.",
+          "enum": [
+            "VTEX Intelligent Search",
+            "Constructor",
+            "Algolia",
+            "Custom"
+          ]
+        },
+
+        "catalogSource": {
+          "type": "string",
+          "description": "System of record for product catalog data.",
+          "enum": ["VTEX Catalog", "PIM", "ERP", "Hybrid"]
+        },
+
+        "hasPricePerCustomer": {
+          "type": "boolean",
+          "description": "True when customer-specific or contract-based pricing is in use (B2B price tables, PROS, etc.)."
+        },
+
+        "paymentMethods": {
+          "type": "array",
+          "description": "Payment methods and gateways integrated. Free-form strings to accommodate the full vendor landscape.",
+          "items": { "type": "string" }
+        },
+
+        "antiFraud": {
+          "type": "string",
+          "description": "Anti-fraud provider integrated with VTEX Payment Hub.",
+          "enum": [
+            "VTEX Native",
+            "Accertify",
+            "Riskified",
+            "Signifyd",
+            "ClearSale",
+            "Custom",
+            "None"
+          ]
+        },
+
+        "taxEngine": {
+          "type": "string",
+          "description": "Tax calculation provider.",
+          "enum": ["VTEX Native", "Vertex", "Avalara", "Custom", "None"]
+        },
+
+        "checkoutType": {
+          "type": "string",
+          "description": "Checkout implementation model.",
+          "enum": [
+            "VTEX SmartCheckout",
+            "Headless Checkout",
+            "Embedded Checkout",
+            "Custom"
+          ]
+        },
+
+        "paymentSplitModel": {
+          "type": "string",
+          "description": "Payment split/intermediation model. Only relevant when accountType is 'Marketplace'.",
+          "enum": ["None", "Marketplace-Split", "External-Split"]
+        },
+
+        "hasSubscriptions": {
+          "type": "boolean",
+          "description": "True when VTEX Subscriptions or equivalent recurring order flow is implemented."
+        },
+        "hasGiftCard": {
+          "type": "boolean",
+          "description": "True when gift card as a payment method or product is part of the architecture."
+        },
+        "hasLoyalty": {
+          "type": "boolean",
+          "description": "True when a loyalty or points programme is integrated."
+        },
+        "hasCustomerCredit": {
+          "type": "boolean",
+          "description": "True when VTEX Customer Credit or a charge-account/net-terms payment flow is implemented."
+        },
+
+        "omsProvider": {
+          "type": "string",
+          "description": "Order management system. Use 'External' when VTEX OMS is bypassed.",
+          "enum": ["VTEX OMS", "Kibo", "External", "Custom"]
+        },
+
+        "fulfillmentModel": {
+          "type": "array",
+          "description": "Fulfilment strategies covered by this architecture.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Warehouse",
+              "Ship-from-store",
+              "Dropship",
+              "Click-and-collect",
+              "Same-day-delivery"
+            ]
+          },
+          "uniqueItems": true
+        },
+
+        "hasReturnsFlow": {
+          "type": "boolean",
+          "description": "True when a returns flow (VTEX Returns App or custom) is part of the architecture."
+        },
+        "multiWarehouse": {
+          "type": "boolean",
+          "description": "True when inventory spans multiple warehouses or fulfilment centres."
+        },
+        "hasStorePickup": {
+          "type": "boolean",
+          "description": "True when click-and-collect / BOPIS is supported."
+        },
+        "hasSameDayDelivery": {
+          "type": "boolean",
+          "description": "True when same-day delivery via a last-mile partner is part of the architecture."
+        },
+        "hasOrderReconciliation": {
+          "type": "boolean",
+          "description": "True when a financial order reconciliation flow between marketplace and sellers exists."
+        },
+
+        "erp": {
+          "type": "string",
+          "description": "ERP system integrated with VTEX (e.g. SAP, Oracle EBS, Linx)."
+        },
+        "wms": {
+          "type": "string",
+          "description": "Warehouse management system integrated with VTEX (e.g. Korber, custom)."
+        },
+        "pim": {
+          "type": "string",
+          "description": "Product information management system (e.g. Salsify, Stibo, Akeneo)."
+        },
+        "crm": {
+          "type": "string",
+          "description": "CRM system integrated for customer data (e.g. Salesforce, Oracle CX)."
+        },
+
+        "identityProvider": {
+          "type": "string",
+          "description": "Identity / SSO provider used alongside VTEX ID.",
+          "enum": [
+            "VTEX ID",
+            "Azure AD",
+            "Azure B2C",
+            "Okta",
+            "Auth0",
+            "Custom"
+          ]
+        },
+
+        "analyticsProvider": {
+          "type": "array",
+          "description": "Web analytics platforms integrated.",
+          "items": { "type": "string" }
+        },
+        "dataWarehouse": {
+          "type": "string",
+          "description": "Data warehouse or lakehouse receiving VTEX data (e.g. Snowflake, BigQuery)."
+        },
+        "cdpOrPersonalization": {
+          "type": "array",
+          "description": "CDP or personalisation tools integrated (e.g. Adobe Target, Criteo, Segment).",
+          "items": { "type": "string" }
+        },
+        "hasDataPipeline": {
+          "type": "boolean",
+          "description": "True when VTEX Data Pipeline is explicitly configured for data export."
+        },
+
+        "region": {
+          "type": "array",
+          "description": "ISO 3166-1 alpha-2 country codes covered by this architecture.",
+          "items": { "type": "string", "pattern": "^[A-Z]{2}$" },
+          "uniqueItems": true
+        },
+
+        "currency": {
+          "type": "array",
+          "description": "ISO 4217 currency codes supported.",
+          "items": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "uniqueItems": true
+        },
+
+        "language": {
+          "type": "array",
+          "description": "BCP 47 language tags for the locales supported (e.g. en-US, pt-BR, es-CO).",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      },
+
+      "if": {
+        "properties": { "accountType": { "const": "Marketplace" } },
+        "required": ["accountType"]
+      },
+      "then": {
+        "required": ["marketplace"],
+        "properties": { "sellerType": { "minItems": 1 } }
+      }
+    },
+
+    "marketplaceGovernance": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Governance rules defining ownership responsibilities between the marketplace operator and its sellers. Required when commerce.accountType is 'Marketplace'.",
+      "required": [
+        "priceOwnership",
+        "paymentOwnership",
+        "catalogOwnership",
+        "fulfillmentOwnership"
+      ],
+      "properties": {
+        "priceOwnership": {
+          "type": "string",
+          "description": "Who sets the final consumer price.",
+          "enum": ["Marketplace", "Seller", "Hybrid"]
+        },
+        "paymentOwnership": {
+          "type": "string",
+          "description": "Who processes the payment transaction.",
+          "enum": ["Marketplace", "Seller", "Split"]
+        },
+        "catalogOwnership": {
+          "type": "string",
+          "description": "Who owns the product catalog master data.",
+          "enum": ["Marketplace", "Seller", "Shared"]
+        },
+        "fulfillmentOwnership": {
+          "type": "string",
+          "description": "Who is responsible for order fulfilment logistics.",
+          "enum": ["Marketplace", "Seller", "Mixed"]
+        },
+        "sellerOnboarding": {
+          "type": "string",
+          "description": "How sellers are onboarded onto the marketplace.",
+          "enum": ["Seller Portal", "API", "Manual", "Custom"]
+        }
+      }
+    },
+
+    "vectorStore": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Pipeline-managed block. Written by the RAG ingestion pipeline after vectorisation. Never authored manually by SAs. Present only after the first successful ingestion run.",
+      "required": ["indexedAt", "chunkIds"],
+      "properties": {
+        "indexedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last successful vectorisation run for this document."
+        },
+        "chunkIds": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Map of docx section name to vector store chunk ID. Keys are fixed section names; values are the IDs assigned by the vector store after ingestion.",
+          "required": ["context", "solution", "tradeoffs"],
+          "properties": {
+            "context": {
+              "type": "string",
+              "description": "Vector ID for the Context section chunk."
+            },
+            "solution": {
+              "type": "string",
+              "description": "Vector ID for the Proposed Solution section chunk."
+            },
+            "tradeoffs": {
+              "type": "string",
+              "description": "Vector ID for the Trade-off Analysis section chunk."
+            },
+            "relatedCases": {
+              "type": "string",
+              "description": "Vector ID for the Related Cases section chunk. Optional — only present if the section exists in the docx."
+            }
+          }
+        }
+      }
+    }
+  }
+}

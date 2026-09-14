@@ -1,0 +1,14 @@
+{
+  "name": "vams",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-examples.js",
+    "check:schema-ids": "node scripts/check-schema-ids.js",
+    "test": "npm run check:schema-ids && npm run validate"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}
