@@ -68,7 +68,7 @@ Full field reference: [`docs/VAMS-Architecture-Case-Schema-Reference.md`](docs/V
 
 ## Schemas
 
-VAMS schemas are versioned, immutable artifacts published from this repository. The current release is defined in [`schemas/manifest.json`](schemas/manifest.json).
+VAMS schemas are versioned, immutable artifacts published from this repository. The current release is defined in [`schemas/manifest.json`](schemas/manifest.json). See [GitHub Releases](https://github.com/miguel-carrera/vams/releases) for release notes.
 
 **URL pattern (pinned release):**
 
@@ -111,6 +111,74 @@ npm ci
 npm test
 ```
 
+## Consuming VAMS
+
+Pin a release tag (currently `v1.0.0`) in every consumer — never use branch URLs in authored documents or production tooling.
+
+**Base URL:**
+
+```
+https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0
+```
+
+### Schemas
+
+| Artifact | Pinned URL |
+| -------- | ---------- |
+| Solution architecture | `…/schemas/solution-architecture.schema.json` |
+| Architecture case metadata | `…/schemas/architecture-case.metadata.schema.json` |
+
+Set `$schema` on every VAMS document to the matching pinned URL.
+
+### Config (Miro mappings)
+
+| File | Path |
+| ---- | ---- |
+| Shape mapping | `…/config/vams-miro-shape-mapping.json` |
+| Connector mapping | `…/config/vams-miro-connector-mapping.json` |
+
+### IDE validation
+
+Add to `.vscode/settings.json` in your project:
+
+```json
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["**/architectures/*.json"],
+      "url": "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/solution-architecture.schema.json"
+    },
+    {
+      "fileMatch": ["**/*.metadata.json"],
+      "url": "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/architecture-case.metadata.schema.json"
+    }
+  ]
+}
+```
+
+### CI validation
+
+Fetch the pinned schema and validate your documents in CI:
+
+```bash
+curl -sL -o /tmp/vams-schema.json \
+  "https://raw.githubusercontent.com/miguel-carrera/vams/v1.0.0/schemas/solution-architecture.schema.json"
+npx ajv validate -s /tmp/vams-schema.json -d path/to/architecture.json
+```
+
+For offline or faster builds, vendor schemas under `vendor/vams/v1.0.0/` and add a CI step that diffs against the canonical URL to detect stale copies.
+
+### Git submodule
+
+```bash
+git submodule add https://github.com/miguel-carrera/vams.git vendor/vams
+cd vendor/vams && git checkout v1.0.0
+```
+
+### Upgrading
+
+When a new schema release ships (e.g. `v1.1.0`), update pinned URLs in your documents, CI, IDE settings, and vendored copies. Old tag URLs remain valid — upgrade only when you choose to adopt the new schema.
+
 ## Examples
 
 | Path | Description |
@@ -149,3 +217,7 @@ The `config/` mappings define how VAMS node types and flow styles translate to M
 ## Contributing
 
 Changes to VAMS require a proposal, impact analysis, backward compatibility review, and version increment. See the [governance model](docs/VTEX-Architecture-Modeling-Specification-VAMS.md#9-governance-model) in the specification.
+
+## License
+
+[MIT](LICENSE)
